@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Departments - Medicare{% endblock %}
+
+{% block content %}
+<header class="text-center my-5">
+    <span class="badge badge-custom badge-secondary-custom mb-2">Our Capabilities</span>
+    <h1 class="fw-bold">Specialized Medical Departments</h1>
+    <p class="text-muted col-md-8 mx-auto">We offer comprehensive clinical services across multiple medical specialties, staffed by leading clinical professionals and equipped with advanced diagnostic technologies.</p>
+</header>
+
+<div class="row g-4">
+    {% for d in dept %}
+    <div class="col-md-4">
+        <div class="card-premium h-100 p-4 d-flex flex-column">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="bg-primary bg-opacity-10 text-primary rounded p-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                    <!-- Dynamically display nice icons based on department names -->
+                    {% if "cardio" in d.dept_name.lower %}
+                        <i class="bi bi-heart-pulse fs-3"></i>
+                    {% elif "neuro" in d.dept_name.lower %}
+                        <i class="bi bi-activity fs-3"></i>
+                    {% elif "pediatr" in d.dept_name.lower %}
+                        <i class="bi bi-baby fs-3"></i>
+                    {% elif "ortho" in d.dept_name.lower %}
+                        <i class="bi bi-person-fill fs-3"></i>
+                    {% elif "dental" in d.dept_name.lower or "dent" in d.dept_name.lower %}
+                        <i class="bi bi-shield-plus fs-3"></i>
+                    {% else %}
+                        <i class="bi bi-clipboard2-pulse fs-3"></i>
+                    {% endif %}
+                </div>
+                <span class="badge badge-custom badge-primary-custom">Department</span>
+            </div>
+            
+            <h4 class="fw-bold mb-2">{{ d.dept_name }}</h4>
+            <p class="text-muted small flex-grow-1">{{ d.dep_desc }}</p>
+            
+            <hr class="my-3">
+            
+            <a href="{% url 'doctors' %}?dept={{ d.dept_name|urlencode }}" class="btn btn-premium-outline btn-sm w-100 mt-auto">
+                <i class="bi bi-people-fill me-2"></i>View Physicians
+            </a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <div class="card-premium p-5 text-center">
+            <i class="bi bi-inbox fs-1 text-muted mb-3"></i>
+            <h5 class="fw-bold">No Departments Found</h5>
+            <p class="text-muted">Please visit the Django administration panel to add medical departments.</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

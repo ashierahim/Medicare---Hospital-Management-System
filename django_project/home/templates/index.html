@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - Medicare Premium{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="row align-items-center py-5 hero-section">
+    <div class="col-lg-6 mb-5 mb-lg-0 text-center text-lg-start">
+        <span class="badge badge-custom badge-primary-custom mb-3">Your Trusted Health Partner</span>
+        <h1 class="hero-title mb-4">Quality Healthcare & Care for You</h1>
+        <p class="hero-subtitle mb-4">Schedule appointments with leading clinical experts, view diagnostic departments, and manage your health records in our premium portal.</p>
+        <div class="d-flex flex-wrap justify-content-center justify-content-lg-start gap-3">
+            <a href="{% url 'booking' %}" class="btn btn-premium btn-lg">
+                <i class="bi bi-calendar-plus me-2"></i>Book Appointment
+            </a>
+            <a href="{% url 'doctors' %}" class="btn btn-premium-outline btn-lg">
+                <i class="bi bi-people me-2"></i>Meet Doctors
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-6 text-center text-lg-start d-flex justify-content-center">
+        <div class="card-premium p-4 shadow-lg w-100" style="max-width: 450px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.5);">
+            <h5 class="fw-bold mb-4 text-dark"><i class="bi bi-info-circle-fill text-primary me-2"></i>Clinic Information Hub</h5>
+            
+            <!-- Emergency Section -->
+            <div class="d-flex align-items-center gap-3 mb-4 p-3 rounded-4 bg-primary bg-opacity-10 border border-primary border-opacity-10 text-start">
+                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; min-width: 50px;">
+                    <i class="bi bi-telephone-inbound-fill fs-4"></i>
+                </div>
+                <div>
+                    <span class="text-xs text-uppercase fw-bold text-primary tracking-wider" style="font-size: 0.75rem; letter-spacing: 1px;">Emergency Hotline (24/7)</span>
+                    <h4 class="fw-bold mb-0 text-primary mt-1">+91 468 999 8888</h4>
+                </div>
+            </div>
+            
+            <!-- Verified Section -->
+            <div class="d-flex align-items-center gap-3 mb-4 p-3 rounded-4 bg-success bg-opacity-10 border border-success border-opacity-10 text-start">
+                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; min-width: 50px;">
+                    <i class="bi bi-patch-check-fill fs-4"></i>
+                </div>
+                <div>
+                    <span class="text-xs text-uppercase fw-bold text-success tracking-wider" style="font-size: 0.75rem; letter-spacing: 1px;">Quality Assurance</span>
+                    <h5 class="fw-bold mb-0 text-success-dark mt-1">100% Certified Specialists</h5>
+                    <p class="text-muted mb-0 small" style="font-size: 0.82rem;">All doctors are board-certified specialists.</p>
+                </div>
+            </div>
+
+            <!-- Location Section -->
+            <div class="d-flex align-items-center gap-3 p-3 rounded-4 bg-secondary bg-opacity-10 border border-secondary border-opacity-10 text-start">
+                <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; min-width: 50px;">
+                    <i class="bi bi-geo-alt-fill fs-4"></i>
+                </div>
+                <div>
+                    <span class="text-xs text-uppercase fw-bold text-secondary tracking-wider" style="font-size: 0.75rem; letter-spacing: 1px;">Clinic Location</span>
+                    <h5 class="fw-bold mb-0 text-dark mt-1">Pathanamthitta, Kerala</h5>
+                    <p class="text-muted mb-0 small" style="font-size: 0.82rem;">Central Medical Complex (parking available).</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Row -->
+<div class="row g-4 my-5">
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-number">12+</div>
+            <div class="stat-label">Specialty Departments</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-number">50+</div>
+            <div class="stat-label">Certified Doctors</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-number">15k+</div>
+            <div class="stat-label">Happy Patients</div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Action Portal -->
+<div class="my-5 py-5">
+    <h2 class="text-center fw-bold mb-2">Explore Our Services</h2>
+    <p class="text-center text-muted mb-5">Access high-quality clinical operations instantly</p>
+    
+    <div class="row g-4 justify-content-center">
+        <!-- Card 1 -->
+        <div class="col-md-4">
+            <div class="card-premium h-100 p-4 text-center d-flex flex-column align-items-center">
+                <div class="rounded-circle bg-light p-4 mb-4 text-primary d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                    <i class="bi bi-hospital fs-1"></i>
+                </div>
+                <h4 class="fw-bold mb-3">Departments</h4>
+                <p class="text-muted mb-4 small flex-grow-1">Browse our clinical disciplines, from Cardiology and Neurology to general outpatient consultation blocks.</p>
+                <a href="{% url 'dept' %}" class="btn btn-premium-outline w-100 mt-auto">View Specialites</a>
+            </div>
+        </div>
+        
+        <!-- Card 2 -->
+        <div class="col-md-4">
+            <div class="card-premium h-100 p-4 text-center d-flex flex-column align-items-center">
+                <div class="rounded-circle bg-light p-4 mb-4 text-secondary d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                    <i class="bi bi-person-heart fs-1"></i>
+                </div>
+                <h4 class="fw-bold mb-3">Qualified Doctors</h4>
+                <p class="text-muted mb-4 small flex-grow-1">Find and consult certified specialists. Filter by clinical department or search directly by physician name.</p>
+                <a href="{% url 'doctors' %}" class="btn btn-premium-outline w-100 mt-auto">Find Doctors</a>
+            </div>
+        </div>
+        
+        <!-- Card 3 -->
+        <div class="col-md-4">
+            <div class="card-premium h-100 p-4 text-center d-flex flex-column align-items-center">
+                <div class="rounded-circle bg-light p-4 mb-4 text-success d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                    <i class="bi bi-calendar-date fs-1"></i>
+                </div>
+                <h4 class="fw-bold mb-3">Easy Booking</h4>
+                <p class="text-muted mb-4 small flex-grow-1">Schedule your clinical consultations online. Select dates, doctors, and receive automatic dashboard verification.</p>
+                <a href="{% url 'booking' %}" class="btn btn-premium w-100 mt-auto">Book Appointment</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

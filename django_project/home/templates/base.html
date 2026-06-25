@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Medicare - Premium Healthcare{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom Premium Stylesheet -->
+    <link rel="stylesheet" href="{% static 'home/css/style.css' %}">
+</head>
+<body>
+
+    <!-- Glassmorphic Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'index' %}">
+                <i class="bi bi-heart-pulse-fill me-2"></i>Medicare
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
+                    <li class="nav-item">
+                        <a class="nav-link" id="nav-home" href="{% url 'index' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="nav-dept" href="{% url 'dept' %}">Departments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="nav-docs" href="{% url 'doctors' %}">Doctors</a>
+                    </li>
+
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" id="nav-bookings" href="{% url 'my_bookings' %}">
+                                <i class="bi bi-journal-check me-1"></i>My Bookings
+                            </a>
+                        </li>
+                        <li class="nav-item ms-lg-2">
+                            <span class="text-muted small me-2 d-none d-lg-inline">
+                                Hi, <strong class="text-dark">{{ user.username }}</strong>
+                            </span>
+                        </li>
+                        <li class="nav-item">
+                            <form action="{% url 'logout' %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1 text-xs">
+                                    Logout
+                                </button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" id="nav-login" href="{% url 'login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-outline-primary btn-sm rounded-pill px-3" href="{% url 'signup' %}">Sign Up</a>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-premium rounded-pill" href="{% url 'booking' %}">
+                            <i class="bi bi-calendar-check me-2"></i>Book Now
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="container my-5">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Premium Footer -->
+    <footer class="footer-custom mt-auto">
+        <div class="container text-center text-md-start">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-heart-pulse-fill me-2"></i>Medicare</h5>
+                    <p class="small text-muted mb-3">Providing world-class, compassionate healthcare services tailored to your family's needs. Empowering health, inspiring hope.</p>
+                    <div class="d-flex justify-content-center justify-content-md-start gap-3">
+                        <a href="#" class="text-muted fs-5"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-muted fs-5"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="text-muted fs-5"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="text-muted fs-5"><i class="bi bi-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4 mb-md-0 ps-md-5">
+                    <h6 class="fw-bold mb-3 text-dark">Quick Navigation</h6>
+                    <ul class="list-unstyled d-flex flex-column gap-2">
+                        <li><a href="{% url 'index' %}" class="footer-link">Home Portal</a></li>
+                        <li><a href="{% url 'dept' %}" class="footer-link">Specialty Departments</a></li>
+                        <li><a href="{% url 'doctors' %}" class="footer-link">Meet Our Doctors</a></li>
+                        <li><a href="{% url 'booking' %}" class="footer-link">Schedule Appointment</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="fw-bold mb-3 text-dark">Get in Touch</h6>
+                    <p class="small text-muted mb-2"><i class="bi bi-geo-alt-fill text-primary me-2"></i>Pathanamthitta, Kerala, India</p>
+                    <p class="small text-muted mb-2"><i class="bi bi-telephone-fill text-primary me-2"></i>+91 468 222 3456</p>
+                    <p class="small text-muted"><i class="bi bi-envelope-fill text-primary me-2"></i>contact@medicare.in</p>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                <p class="small text-muted mb-0">&copy; 2026 Medicare Initiative. All rights reserved.</p>
+                <div class="d-flex gap-3 text-muted small">
+                    <a href="#" class="text-decoration-none text-muted">Privacy Policy</a>
+                    <span>&bull;</span>
+                    <a href="#" class="text-decoration-none text-muted">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript to auto-active active navigation tab -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentPath = window.location.pathname;
+            const homeTab = document.getElementById('nav-home');
+            const deptTab = document.getElementById('nav-dept');
+            const docsTab = document.getElementById('nav-docs');
+            const bookingsTab = document.getElementById('nav-bookings');
+            const loginTab = document.getElementById('nav-login');
+
+            if (currentPath === '/') {
+                homeTab?.classList.add('active-tab');
+            } else if (currentPath.includes('/department/')) {
+                deptTab?.classList.add('active-tab');
+            } else if (currentPath.includes('/doctors/')) {
+                docsTab?.classList.add('active-tab');
+            } else if (currentPath.includes('/my-bookings/')) {
+                bookingsTab?.classList.add('active-tab');
+            } else if (currentPath.includes('/login/')) {
+                loginTab?.classList.add('active-tab');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Doctors - Medicare{% endblock %}
+
+{% block content %}
+<header class="text-center my-5">
+    <span class="badge badge-custom badge-primary-custom mb-2">Our Specialists</span>
+    <h1 class="fw-bold">Meet Our Medical Team</h1>
+    <p class="text-muted col-md-8 mx-auto">Our team of experienced and certified healthcare practitioners is dedicated to providing you with the highest level of care.</p>
+</header>
+
+<!-- Search and Filtering Section -->
+<div class="row justify-content-center mb-5">
+    <div class="col-md-10 col-lg-8">
+        <div class="search-container">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0 text-muted rounded-start-pill border-1" style="border-color: var(--border-color)">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" id="search-name" class="form-control form-control-premium border-start-0 rounded-end-pill shadow-none" placeholder="Search doctor by name...">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0 text-muted rounded-start-pill border-1" style="border-color: var(--border-color)">
+                            <i class="bi bi-filter"></i>
+                        </span>
+                        <select id="filter-dept" class="form-select form-control-premium border-start-0 rounded-end-pill shadow-none">
+                            <option value="">All Departments</option>
+                            <!-- Generate department options dynamically from the unique list of departments of listed doctors -->
+                            {% regroup doctors by dept_name.dept_name as dept_list %}
+                            {% for d_group in dept_list %}
+                                <option value="{{ d_group.grouper }}">{{ d_group.grouper }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Doctors Grid -->
+<div class="row g-4" id="doctors-container">
+    {% for d in doctors %}
+    <div class="col-md-6 col-lg-4 doctor-card-wrapper" data-name="{{ d.doc_name|lower }}" data-dept="{{ d.dept_name.dept_name }}">
+        <article class="card-premium h-100 d-flex flex-column">
+            <div class="position-relative">
+                {% if d.doc_image %}
+                    <img src="{{ d.doc_image.url }}" class="card-img-top" alt="{{ d.doc_name }}">
+                {% else %}
+                    <!-- Premium default avatar image if doctor image is missing -->
+                    <div class="d-flex flex-column align-items-center justify-content-center bg-primary bg-opacity-10 text-primary card-img-top" style="height: 250px;">
+                        <i class="bi bi-person-fill-gear" style="font-size: 5rem;"></i>
+                        <span class="text-xs text-muted mt-2">Medicare Specialist Profile</span>
+                    </div>
+                {% endif %}
+                <span class="position-absolute top-0 end-0 m-3 badge badge-custom badge-secondary-custom shadow-sm">{{ d.dept_name.dept_name }}</span>
+            </div>
+            
+            <div class="card-body p-4 d-flex flex-column">
+                <h4 class="fw-bold mb-1">{{ d.doc_name }}</h4>
+                <div class="mb-3">
+                    <span class="badge-custom badge-primary-custom"><i class="bi bi-patch-check-fill me-1"></i>{{ d.doc_spec }}</span>
+                </div>
+                <p class="text-muted small mb-4">Dedicated clinical specialist with years of practice in patient care and rehabilitation procedures.</p>
+                
+                <hr class="mt-auto mb-3">
+                
+                <a href="{% url 'booking' %}?doctor={{ d.id }}" class="btn btn-premium w-100">
+                    <i class="bi bi-calendar2-check-fill me-2"></i>Book Consultation
+                </a>
+            </div>
+        </article>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <div class="card-premium p-5 text-center">
+            <i class="bi bi-person-slash fs-1 text-muted mb-3"></i>
+            <h5 class="fw-bold">No Doctors Available</h5>
+            <p class="text-muted">There are currently no listed doctors. Add them in the Django admin panel to display them here.</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Dynamic Search/Filter Javascript -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.getElementById('search-name');
+        const deptFilter = document.getElementById('filter-dept');
+        const cards = document.querySelectorAll('.doctor-card-wrapper');
+        const container = document.getElementById('doctors-container');
+
+        // Parse query parameter 'dept' from URL if redirecting from departments page
+        const urlParams = new URLSearchParams(window.location.search);
+        const deptParam = urlParams.get('dept');
+        if (deptParam) {
+            deptFilter.value = deptParam;
+        }
+
+        const filterDoctors = () => {
+            const searchValue = searchInput.value.trim().toLowerCase();
+            const deptValue = deptFilter.value;
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name');
+                const dept = card.getAttribute('data-dept');
+                
+                const matchesName = name.includes(searchValue);
+                const matchesDept = !deptValue || dept === deptValue;
+
+                if (matchesName && matchesDept) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Handle empty state dynamically
+            let noResultDiv = document.getElementById('no-results-alert');
+            if (visibleCount === 0) {
+                if (!noResultDiv) {
+                    noResultDiv = document.createElement('div');
+                    noResultDiv.id = 'no-results-alert';
+                    noResultDiv.className = 'col-12 text-center py-5';
+                    noResultDiv.innerHTML = `
+                        <div class="card-premium p-5 text-center">
+                            <i class="bi bi-search-heart fs-1 text-muted mb-3"></i>
+                            <h5 class="fw-bold">No Matches Found</h5>
+                            <p class="text-muted">Try modifying your search text or department filter settings.</p>
+                        </div>
+                    `;
+                    container.appendChild(noResultDiv);
+                }
+            } else {
+                if (noResultDiv) {
+                    noResultDiv.remove();
+                }
+            }
+        };
+
+        // Bind events
+        searchInput.addEventListener('input', filterDoctors);
+        deptFilter.addEventListener('change', filterDoctors);
+
+        // Initial filter run (to handle query parameters)
+        if (deptParam) {
+            filterDoctors();
+        }
+    });
+</script>
+{% endblock %}

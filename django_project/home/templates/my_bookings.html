@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}My Bookings - Medicare{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">My Appointments Dashboard</h2>
+            <p class="text-muted small mb-0">View, monitor, or cancel your scheduled clinical consultations.</p>
+        </div>
+        <a href="{% url 'booking' %}" class="btn btn-premium rounded-pill align-self-start">
+            <i class="bi bi-calendar-plus me-2"></i>Book New Consultation
+        </a>
+    </div>
+
+    {% if bookings %}
+        <div class="table-responsive">
+            <table class="table table-custom align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col">Specialist</th>
+                        <th scope="col">Specialty / Department</th>
+                        <th scope="col">Patient Info</th>
+                        <th scope="col">Appointment Date</th>
+                        <th scope="col">Status</th>
+                        <th scope="col" class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for b in bookings %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                                        <i class="bi bi-person-badge-fill"></i>
+                                    </div>
+                                    <div>
+                                        <span class="fw-bold d-block text-dark">{{ b.doc_name.doc_name }}</span>
+                                        <span class="text-xs text-muted">Physician ID: #{{ b.doc_name.id }}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge-custom badge-primary-custom mb-1">{{ b.doc_name.doc_spec }}</span>
+                                <span class="text-muted d-block small">Dept: {{ b.doc_name.dept_name.dept_name }}</span>
+                            </td>
+                            <td>
+                                <span class="fw-semibold text-dark d-block">{{ b.p_name }}</span>
+                                <span class="text-muted text-xs d-block"><i class="bi bi-phone-fill me-1"></i>{{ b.p_phone }}</span>
+                            </td>
+                            <td>
+                                <div class="fw-semibold text-dark"><i class="bi bi-calendar3 me-2 text-primary"></i>{{ b.booked_on|date:"F d, Y" }}</div>
+                            </td>
+                            <td>
+                                <span class="badge-custom badge-success-custom"><i class="bi bi-clock-history me-1"></i>Confirmed Slot</span>
+                            </td>
+                            <td class="text-center">
+                                <button type="button" 
+                                        class="btn btn-outline-danger btn-sm rounded-pill px-3"
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#cancelModal" 
+                                        data-doc-name="{{ b.doc_name.doc_name }}" 
+                                        data-cancel-url="{% url 'cancel_booking' b.id %}">
+                                    <i class="bi bi-calendar-x me-1"></i>Cancel Visit
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <div class="p-5 text-center">
+                <i class="bi bi-calendar-x-fill text-muted" style="font-size: 4rem;"></i>
+                <h4 class="fw-bold mt-3">No Scheduled Appointments</h4>
+                <p class="text-muted col-md-6 mx-auto">You have not booked any consultations yet. Explore our specialist medical practitioners and secure your slots today.</p>
+                <a href="{% url 'doctors' %}" class="btn btn-premium mt-3">
+                    <i class="bi bi-person-fill me-2"></i>Find a Doctor
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Cancellation Confirmation Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold" id="cancelModalLabel">Cancel Appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="bg-danger bg-opacity-10 text-danger rounded-circle p-3 d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                    <i class="bi bi-exclamation-triangle-fill fs-2"></i>
+                </div>
+                <p class="mb-0 fs-5 fw-semibold text-dark">Cancel visit with <span id="modal-doc-name" class="text-primary"></span>?</p>
+                <p class="text-muted small mt-2">This will cancel your scheduled slot. You will have to book again to schedule another consultation.</p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center gap-3 pt-0">
+                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Keep Appointment</button>
+                <form id="cancel-form" method="post" action="">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger rounded-pill px-4">Yes, Cancel Visit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal parameter updating Javascript -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cancelModal = document.getElementById('cancelModal');
+        if (cancelModal) {
+            cancelModal.addEventListener('show.bs.modal', (event) => {
+                // Button that triggered the modal
+                const button = event.relatedTarget;
+                
+                // Extract info from data-* attributes
+                const docName = button.getAttribute('data-doc-name');
+                const cancelUrl = button.getAttribute('data-cancel-url');
+                
+                // Update the modal's content
+                const modalDocName = cancelModal.querySelector('#modal-doc-name');
+                const cancelForm = cancelModal.querySelector('#cancel-form');
+                
+                modalDocName.textContent = docName;
+                cancelForm.action = cancelUrl;
+            });
+        }
+    });
+</script>
+{% endblock %}
