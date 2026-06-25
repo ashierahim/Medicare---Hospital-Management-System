@@ -6,7 +6,7 @@ Medicare is a professional, responsive, and feature-rich clinical portal built w
 
 ## Key Features
 
-- **Premium Front-end Redesign**: Clean layouts using the modern **Outfit** typography system, subtle gradients, micro-animations, and glassmorphic navigation menus.
+- **Premium Front-end Design**: Clean layouts using the modern **Outfit** typography system, subtle gradients, micro-animations, and glassmorphic navigation menus.
 - **Dynamic Specialists Directory**: Real-time doctor search bar and department filters powered by vanilla JavaScript (no heavy libraries needed).
 - **Personal Booking Dashboard ("My Bookings")**: Secure tracking of scheduled appointments. Patient data is associated directly with their registered account.
 - **Safe Cancellations**: Integrated cancellation workflow including a Bootstrap confirmation modal to prevent accidental deletion of consultation slots.
